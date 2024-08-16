@@ -1,0 +1,1 @@
+.venv\Scripts\activate.bat && python subs-v2.0.py
