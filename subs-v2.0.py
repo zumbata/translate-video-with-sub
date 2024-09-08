@@ -75,20 +75,20 @@ def create_video_with_subtitles(input_file, subtitle_file, output_file):
     subtitle_clips = []
     for subtitle in subtitles:
         text_clip = TextClip(subtitle.content, fontsize=24, color='white', size=(
-            clip.size[0], int(clip.size[1]/8)), method='caption', bg_color='black')
+            clip.size[0], None), method='caption', bg_color='black')
         text_clip = text_clip.set_position(('center', 'bottom'))
         text_clip = text_clip.set_start(subtitle.start.total_seconds()).set_duration(
             (subtitle.end - subtitle.start).total_seconds())
         subtitle_clips.append(text_clip)
-    video = mp.CompositeVideoClip([clip] + subtitle_clips)
-    video.write_videofile(output_file, codec='libx264', audio_codec='aac')
+        video = mp.CompositeVideoClip([clip] + subtitle_clips)
+        video.write_videofile(
+            output_file, codec='libx264', audio_codec='aac')
 
+        if __name__ == '__main__':
+            application = ApplicationBuilder().token(
+                os.environ.get("TELEGRAM_TOKEN")).build()
 
-if __name__ == '__main__':
-    application = ApplicationBuilder().token(
-        os.environ.get("TELEGRAM_TOKEN")).build()
-
-    application.add_handler(CommandHandler('start', start))
-    application.add_handler(MessageHandler(
-        filters.VIDEO | filters.AUDIO, handle_document))
-    application.run_polling()
+            application.add_handler(CommandHandler('start', start))
+            application.add_handler(MessageHandler(
+                filters.VIDEO | filters.AUDIO, handle_document))
+            application.run_polling()
