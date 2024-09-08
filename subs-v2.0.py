@@ -76,11 +76,11 @@ def create_video_with_subtitles(input_file, subtitle_file, output_file):
     for subtitle in subtitles:
         text_clip = TextClip(subtitle.content, fontsize=24, color='white', size=(
             clip.size[0], int(clip.size[1]/8)), method='caption', bg_color='black')
+        text_clip = text_clip.set_position(('center', 'bottom'))
         text_clip = text_clip.set_start(subtitle.start.total_seconds()).set_duration(
             (subtitle.end - subtitle.start).total_seconds())
-        text_clip = text_clip.set_position(('center', 'bottom'))
         subtitle_clips.append(text_clip)
-    video = mp.CompositeVideoClip(subtitle_clips + [clip])
+    video = mp.CompositeVideoClip([clip] + subtitle_clips)
     video.write_videofile(output_file, codec='libx264', audio_codec='aac')
 
 
