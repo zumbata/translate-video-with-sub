@@ -84,11 +84,12 @@ def create_video_with_subtitles(input_file, subtitle_file, output_file):
         video.write_videofile(
             output_file, codec='libx264', audio_codec='aac')
 
-        if __name__ == '__main__':
-            application = ApplicationBuilder().token(
-                os.environ.get("TELEGRAM_TOKEN")).build()
 
-            application.add_handler(CommandHandler('start', start))
-            application.add_handler(MessageHandler(
-                filters.VIDEO | filters.AUDIO, handle_document))
-            application.run_polling()
+if __name__ == '__main__':
+    application = ApplicationBuilder().token(
+        os.environ.get("TELEGRAM_TOKEN")).build()
+
+    application.add_handler(CommandHandler('start', start))
+    application.add_handler(MessageHandler(
+        filters.VIDEO | filters.AUDIO, handle_document))
+    application.run_polling()
