@@ -42,13 +42,15 @@ async def handle_document(update: Update, context: CallbackContext):
         create_video_with_subtitles(media_path, srt_path, output_file)
         with open(output_file, 'rb') as video:
             await update.message.reply_video(
-                video, caption="Here is your video with embedded subtitles!")
+                video, caption="Here is your video with embedded subtitles: ")
+        with open(srt_path, 'r') as subtitles:
+            await update.message.reply_document(subtitles, caption="Here is also the .srt file: ")
         os.remove(media_path)
         os.remove(srt_path)
         os.remove(output_file)
     else:
         await update.message.reply_text(
-            "Unsupported format. Try again with other format")
+            "Unsupported format. Try again with other format.")
 
 
 def create_video_with_subtitles(input_file, subtitle_file, output_file):
@@ -78,8 +80,7 @@ def create_video_with_subtitles(input_file, subtitle_file, output_file):
             (subtitle.end - subtitle.start).total_seconds())
         text_clip = text_clip.set_position(('center', 'bottom'))
         subtitle_clips.append(text_clip)
-
-    video = mp.CompositeVideoClip([clip] + subtitle_clips)
+    video = mp.CompositeVideoClip(subtitle_clips + [clip])
     video.write_videofile(output_file, codec='libx264', audio_codec='aac')
 
 
